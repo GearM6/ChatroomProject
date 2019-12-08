@@ -66,15 +66,15 @@ class ReadThread extends Thread {
         while (true) {
             try {
 				
-				do{
-                response = reader.readLine();
-                System.out.println("\n" + response);
+		do{
+	        	response = reader.readLine();
+                	System.out.println("\n" + response);
  
-                // prints the username after displaying the server's message
-                if (client.getUsername() != null) {
-                    System.out.print("[" + client.getUsername() + "]: ");
-                }
-			}while(response.equals("."));
+              		// prints the username after displaying the server's message
+                	if (client.getUsername() != null) {
+                    		System.out.print("[" + client.getUsername() + "]: ");
+                	}
+		}while(response.equals("."));    //exits if client enters "."
             } catch (IOException ex) {
                 System.out.println(ex.getMessage());
                 break;
