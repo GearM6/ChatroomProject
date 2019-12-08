@@ -45,8 +45,12 @@ public class UserThread extends Thread {
             do {
                 clientMessage = reader.readLine();
                 serverMessage = "[" +userName + "]: " + clientMessage;
+                if(clientMessage.equals(".")){
+                    serverMessage = "Confirming sign off";
+                    server.exitConf(serverMessage, this);
+                }
                 server.broadcast(serverMessage, this);
-            } while (!clientMessage.equals("bye"));
+            } while (!clientMessage.equals("."));
 
             server.removeUser(userName, this);
             socket.close();
@@ -54,7 +58,7 @@ public class UserThread extends Thread {
             serverMessage = userName + " has left.";
             server.broadcast(serverMessage, this);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e);
         }
     }
 }
