@@ -32,6 +32,8 @@ public class Server {
     void addUser(String userName) { userNames.add(userName); }
 
     void removeUser(String userName, Thread userThread) {
+        System.out.println(userName + " wants to leave the room.");
+        System.out.println("Confirming " + userName + " sign off.");
         boolean removed = userNames.remove(userName);
         if (removed) {
             userThreads.remove(userThread);
@@ -47,6 +49,14 @@ public class Server {
         for (UserThread user : userThreads) {
             if (user != excludeUser)
                 user.sendMessage(message);
+        }
+    }
+    
+    void exitConf(String message, UserThread excludeUser){
+        for(UserThread user : userThreads){
+            if (user == excludeUser)
+                   user.sendMessage(message);
+            
         }
     }
 
