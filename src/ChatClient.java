@@ -1,5 +1,8 @@
 import java.net.*;
 import java.io.*;
+import java.time.*;
+import java.text.*;
+import java.util.*;
 
 public class ChatClient{
 	private String hostname;
@@ -112,8 +115,9 @@ class WriteThread extends Thread {
         String text;
  
         do {
+            DateFormat df = new SimpleDateFormat("HH:mm:ss  MM/dd/YY");
             text = console.readLine("[" + username + "]: ");
-            writer.println(text);
+            writer.printf( text + " %80s", (df.format(new Date()) +"\n"));
  
         } while (!text.equals("."));
  
