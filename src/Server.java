@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashSet;
@@ -61,13 +62,8 @@ public class Server {
     }
 
     public static void main(String[] args) throws IOException {
-        if (args.length < 1) {
-            System.out.println("Syntax: java Server <port-number>");
-            System.exit(0);
-        }
 
-        int port = Integer.parseInt(args[0]);
-        Server server = new Server(port);
+        Server server = new Server(8000);
 
         server.execute();
     }

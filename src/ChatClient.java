@@ -1,3 +1,13 @@
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+
 import java.net.*;
 import java.io.*;
 import java.time.*;
@@ -8,10 +18,13 @@ public class ChatClient{
 	private String hostname;
 	private int port;
 	private String username;
-	
-	public ChatClient(String hostname, int port){
+	private StringBuilder chatLogBuilder;
+
+	public ChatClient(String hostname, int port, String username){
 		this.hostname = hostname;
 		this.port = port;
+		this.username = username;
+		this.chatLogBuilder = new StringBuilder();
 	}
 		
 	public void execute(){
@@ -19,7 +32,7 @@ public class ChatClient{
 			Socket socket = new Socket(hostname,port);
 			System.out.println("Connected to chat server");
 			new ReadThread(socket,this).start();
-			new WriteThread(socket,this).start();
+			new WriteThread(socket,this, this.username).start();
 		}
 		catch(UnknownHostException e){
 			System.out.println("Server not found: " + e.getMessage());
@@ -28,7 +41,9 @@ public class ChatClient{
 			System.out.println(e.getMessage());
 		}
 	}
-	
+
+
+
 	void setUsername(String username){
 		this.username = username;
 	}
@@ -36,26 +51,22 @@ public class ChatClient{
 	String getUsername(){
 		return this.username;
 	}
-	
-	public static void main(String[] args){
-		if(args.length<2)
-			return;
-		String hostname = args[0];
-		int port = Integer.parseInt(args[1]);
-		
-		ChatClient client = new ChatClient(hostname,port);
-		client.execute();
-	}
+
 }
+
 class ReadThread extends Thread {
     private BufferedReader reader;
     private Socket socket;
     private ChatClient client;
 	private String response;
-    public ReadThread(Socket socket, ChatClient client) {
+	private Parent root;
+	private TextArea chatLog;
+
+    public ReadThread(Socket socket, ChatClient client) throws IOException {
         this.socket = socket;
         this.client = client;
- 
+        this.root = FXMLLoader.load(getClass().getResource("ChatAppStyle.fxml"));
+        this.chatLog = (TextArea)root.lookup("#chatLog");
         try {
             InputStream input = socket.getInputStream();
             reader = new BufferedReader(new InputStreamReader(input));
@@ -70,13 +81,13 @@ class ReadThread extends Thread {
             try {
 				
 		do{
-	        	response = reader.readLine();
-                	System.out.println("\n" + response);
- 
-              		// prints the username after displaying the server's message
-                	if (client.getUsername() != null) {
-                    		System.out.print("[" + client.getUsername() + "]: ");
-                	}
+            response = reader.readLine();
+                System.out.println("\n" + response);
+                // prints the username after displaying the server's message
+                if (client.getUsername() != null) {
+                    System.out.print("[" + client.getUsername() + "]: ");
+                    chatLog.setText(chatLog.getText()+response);
+                }
 		}while(response.equals("."));    //exits if client enters "."
             } catch (IOException ex) {
                 System.out.println(ex.getMessage());
@@ -90,11 +101,12 @@ class WriteThread extends Thread {
     private PrintWriter writer;
     private Socket socket;
     private ChatClient client;
+    private String username;
 
-    public WriteThread(Socket socket, ChatClient client) {
+    public WriteThread(Socket socket, ChatClient client, String username) {
         this.socket = socket;
         this.client = client;
- 
+        this.username = username;
         try {
             OutputStream output = socket.getOutputStream();
             writer = new PrintWriter(output, true);
@@ -105,22 +117,10 @@ class WriteThread extends Thread {
     }
  
     public void run() {
- 
-        Console console = System.console();
- 
-        String username = console.readLine("\nEnter your name: ");
+        String username = this.username;
         client.setUsername(username);
         writer.println(username);
- 
-        String text;
- 
-        do {
-            DateFormat df = new SimpleDateFormat("HH:mm:ss  MM/dd/YY");
-            text = console.readLine("[" + username + "]: ");
-            writer.printf( text + " %80s", (df.format(new Date()) +"\n"));
- 
-        } while (!text.equals("."));
- 
+
         try {
             socket.close();
         } catch (IOException ex) {
