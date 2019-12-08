@@ -117,9 +117,18 @@ class WriteThread extends Thread {
     }
  
     public void run() {
+        Scanner scanner = new Scanner(System.in);
+
         String username = this.username;
         client.setUsername(username);
         writer.println(username);
+
+        String text;
+
+        do {
+            text = scanner.nextLine();
+            writer.println(text);
+        } while (!text.equals("."));
 
         try {
             socket.close();
