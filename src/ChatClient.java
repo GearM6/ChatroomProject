@@ -2,6 +2,7 @@
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Control;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -33,7 +34,7 @@ public class ChatClient{
 			Socket socket = new Socket(hostname,port);
 			System.out.println("Connected to chat server");
 			new ReadThread(socket,this, controller).start();
-			new WriteThread(socket,this, this.username).start();
+			new WriteThread(socket,this, this.username, controller).start();
 		}
 		catch(UnknownHostException e){
 			System.out.println("Server not found: " + e.getMessage());
@@ -88,7 +89,7 @@ class ReadThread extends Thread {
                 // prints the username after displaying the server's message
                 if (client.getUsername() != null) {
                     System.out.print("[" + client.getUsername() + "]: ");
-                    controller.updateChatLog(response);
+                    controller.updateChatLog("\n" + response);
                 }
 		}while(response.equals("."));    //exits if client enters "."
             } catch (IOException ex) {
@@ -104,11 +105,13 @@ class WriteThread extends Thread {
     private Socket socket;
     private ChatClient client;
     private String username;
+    private Controller controller;
 
-    public WriteThread(Socket socket, ChatClient client, String username) {
+    public WriteThread(Socket socket, ChatClient client, String username, Controller controller) {
         this.socket = socket;
         this.client = client;
         this.username = username;
+        this.controller = controller;
         try {
             OutputStream output = socket.getOutputStream();
             writer = new PrintWriter(output, true);
@@ -129,6 +132,7 @@ class WriteThread extends Thread {
 
         do {
             text = scanner.nextLine();
+            controller.updateChatLog("\n" + text);
             writer.println(text);
         } while (!text.equals("."));
 

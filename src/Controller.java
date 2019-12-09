@@ -31,6 +31,6 @@ public class Controller {
         }
     }
     @FXML public void updateChatLog(String message){
-        chatLog.setText(message);
+        chatLog.appendText(message);
     }
 }
