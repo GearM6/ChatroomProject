@@ -1,4 +1,3 @@
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
@@ -11,10 +10,7 @@ import javafx.scene.media.MediaPlayer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
-import java.util.Locale;
 
 public class Controller {
     @FXML private TextField userNameTextField;
@@ -45,26 +41,9 @@ public class Controller {
     }
     @FXML
     private void sendMessage(){
-        String msg = "";
-        messageBuffer.clear();
-
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.getDefault());
-        String t = formatter.format(LocalTime.now());
-
-
-        if(messageTextField.getText().equals(".")){
-            loginButton.setDisable(true);
-            messageTextField.setDisable(true);
-            msg = userNameTextField.getText() + " has left the chat.";
-        }
-        else{
-            msg = "" + userNameTextField.getText() + " [" + t + "]: " +  messageTextField.getText();
-        }
-
+        String msg = messageTextField.getText();
         messageBuffer.add(msg);
         messageTextField.setText("");
-
         String audio = "send-receive.mp3";
         try{
             Media sound = new Media(new File(audio).toURI().toString());

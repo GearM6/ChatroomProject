@@ -28,7 +28,7 @@ public class Main extends Application {
         //login
         this.primaryStage = new Stage();
         this.primaryStage.setTitle("Welcome to the Chat!");
-        Label prompt = new Label("Enter Username:");
+        Label prompt = new Label("Enter UserName:");
         TextField userName = new TextField();
         Button login = new Button ("Login");
         login.setOnAction(event ->{
@@ -39,7 +39,6 @@ public class Main extends Application {
                 e.printStackTrace();
             }
         });
-
         VBox all = new VBox(10, prompt, userName, login);
         all.setAlignment(Pos.CENTER);
         all.setPadding(new Insets(10));
