@@ -136,12 +136,15 @@ class WriteThread extends Thread {
 
         String text = "";
         do {
-            if(!controller.messageBuffer.isEmpty()){
-                System.out.println(controller.messageBuffer.size());
-                text = controller.getNextMessage();
-                if(!text.equals("")) {
-                    controller.updateChatLog("\n" + text);
-                    writer.println(text);
+            synchronized (controller.messageBuffer){
+                if(!controller.messageBuffer.isEmpty()){
+
+                    System.out.println(controller.messageBuffer.size());
+                    text = controller.getNextMessage();
+                    if(!text.equals("")) {
+                        controller.updateChatLog("\n" + text);
+                        writer.println(text);
+                    }
                 }
             }
 
