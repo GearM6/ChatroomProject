@@ -56,6 +56,7 @@ public class Controller {
         if(messageTextField.getText().equals(".")){
             System.out.println("hey");
             msg = "Your connection has been closed.";
+            loginButton.setDisable(true);
             messageTextField.setDisable(true);
         }
         else{
