@@ -1,5 +1,8 @@
 import java.io.*;
 import java.net.Socket;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 public class UserThread extends Thread {
     private Socket socket;
@@ -31,6 +34,7 @@ public class UserThread extends Thread {
             BufferedReader reader = new BufferedReader(new InputStreamReader(input));
 
             OutputStream output = socket.getOutputStream();
+
             writer = new PrintWriter(output, true);
 
             printUsers();
@@ -45,7 +49,14 @@ public class UserThread extends Thread {
 
             do {
                 clientMessage = reader.readLine();
-                serverMessage = "" +userName + ": " + clientMessage;
+
+
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.getDefault());
+                LocalTime time = LocalTime.now();
+                String t = formatter.format(time);
+
+
+                serverMessage = "" + userName + " [" + t + "]: "+ clientMessage;
                 if(clientMessage.equals(".")){
                     serverMessage = "Confirming sign off";
                     server.exitConf(serverMessage, this);
@@ -57,6 +68,7 @@ public class UserThread extends Thread {
 
             server.removeUser(userName, this);
             socket.close();
+            System.out.println(userName + " has left the chat.");
 
             serverMessage = userName + " has left.";
             server.broadcast(serverMessage, this);

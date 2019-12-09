@@ -28,7 +28,7 @@ public class Main extends Application {
         //login
         this.primaryStage = new Stage();
         this.primaryStage.setTitle("Welcome to the Chat!");
-        Label prompt = new Label("Enter UserName:");
+        Label prompt = new Label("Enter Username:");
         TextField userName = new TextField();
         Button login = new Button ("Login");
         login.setOnAction(event ->{

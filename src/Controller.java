@@ -1,3 +1,4 @@
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
@@ -10,7 +11,10 @@ import javafx.scene.media.MediaPlayer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
+import java.util.Locale;
 
 public class Controller {
     @FXML private TextField userNameTextField;
@@ -41,9 +45,26 @@ public class Controller {
     }
     @FXML
     private void sendMessage(){
-        String msg = messageTextField.getText();
+        String msg = "";
+
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.getDefault());
+        LocalTime time = LocalTime.now();
+        String t = formatter.format(time);
+
+
+        if(messageTextField.getText().equals(".")){
+            System.out.println("hey");
+            msg = "Your connection has been closed.";
+            messageTextField.setDisable(true);
+        }
+        else{
+            msg = "" + userNameTextField.getText() + " [" + t + "]: "+ messageTextField.getText();
+        }
+
         messageBuffer.add(msg);
         messageTextField.setText("");
+
         String audio = "send-receive.mp3";
         try{
             Media sound = new Media(new File(audio).toURI().toString());
