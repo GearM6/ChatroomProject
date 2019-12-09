@@ -81,6 +81,7 @@ class ReadThread extends Thread {
     private Parent root;
     private Controller controller;
     DateTimeFormatter formatter;
+    private String time;
 
 
     public ReadThread(Socket socket, ChatClient client, Controller controller) throws IOException {
@@ -88,6 +89,7 @@ class ReadThread extends Thread {
         this.client = client;
         this.root = FXMLLoader.load(getClass().getResource("ChatAppStyle.fxml"));
         this.controller = controller;
+        this.formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.getDefault());
         try {
             InputStream input = socket.getInputStream();
             reader = new BufferedReader(new InputStreamReader(input));
@@ -106,8 +108,9 @@ class ReadThread extends Thread {
 
                     // prints the username after displaying the server's message
                     if (client.getUsername() != null) {
+                        this.time = this.formatter.format(LocalTime.now());
                         System.out.print("" + client.getUsername() + ": ");
-                        controller.updateChatLog("\n" + response);
+                        controller.updateChatLog("\n" + "[" + time + "] " + response);
                     }
                 }while(response.equals("."));    //exits if client enters "."
             } catch (IOException ex) {
