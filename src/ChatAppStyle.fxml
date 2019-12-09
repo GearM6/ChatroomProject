@@ -18,10 +18,9 @@
   <children>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="403.0" prefWidth="688.0" VBox.vgrow="ALWAYS">
       <children>
-          <TextField id="usernameTextField" fx:id="userNameTextField" layoutX="14.0" layoutY="14.0" onKeyPressed="#changeUserName" prefHeight="27.0" prefWidth="139.0" promptText="Username" text="User" />
+          <TextField id="usernameTextField" fx:id="userNameTextField" layoutX="14.0" layoutY="14.0" onKeyPressed="#changeUserName" prefHeight="27.0" prefWidth="139.0" promptText="Username" editable="false" />
           <Button id="loginButton" fx:id="loginButton" onAction="#sendMessage" layoutX="623.0" layoutY="368.0" mnemonicParsing="false" text="Send" />
-          <TextArea fx:id="chatLog" layoutX="170.0" layoutY="14.0" prefHeight="308.0" prefWidth="480" editable="false"></TextArea>
-          <TextArea fx:id="userList" layoutX="14.0" layoutY="49.0" prefHeight="273.0" prefWidth="130.0" editable="false"></TextArea>
+          <TextArea fx:id="chatLog" layoutX="14.0" layoutY="60.0" prefHeight="280.0" prefWidth="660" editable="false"></TextArea>
             <TextField id="messageTextField" fx:id="messageTextField" layoutX="14.0" layoutY="368.0" prefHeight="27.0" prefWidth="598.0" promptText="Message" onKeyPressed="#listenForEnter"/>
             <Separator layoutY="342.0" prefHeight="11.0" prefWidth="687.0" />
       </children>

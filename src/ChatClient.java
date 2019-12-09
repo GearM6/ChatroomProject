@@ -24,18 +24,21 @@ public class ChatClient{
 	private String username;
 	private StringBuilder chatLogBuilder;
 	private Controller controller;
+	private Socket socket;
 
-	public ChatClient(String hostname, int port, String username, Controller controller){
+	public ChatClient(String hostname, int port, String username, Controller controller) throws IOException {
 		this.hostname = hostname;
 		this.port = port;
 		this.controller = controller;
-        this.username = controller.getUserName();
+        this.username = username;
         this.chatLogBuilder = new StringBuilder();
+        this.socket = new Socket(hostname,port);
 	}
 		
 	public void execute(){
+	    controller.getUserNameTextField().setText(this.username);
+	    controller.getMessageTextField().requestFocus();
 		try{
-			Socket socket = new Socket(hostname,port);
 			System.out.println("Connected to chat server");
 			new ReadThread(socket,this, controller).start();
 			new WriteThread(socket,this, this.username, controller).start();
@@ -51,14 +54,14 @@ public class ChatClient{
 	void setUsername(){
 		this.username = controller.getUserName();
 	}
-	void setUsername(String username){
-        this.username = username;
-    }
-
 	
 	String getUsername(){
 		return this.username;
 	}
+	public void terminate() throws IOException {
+	    PrintWriter writer = new PrintWriter(this.socket.getOutputStream());
+	    writer.println(".");
+    }
 
 }
 
@@ -88,16 +91,15 @@ class ReadThread extends Thread {
     public void run() {
         while (true) {
             try {
-				
-		do{
-            response = reader.readLine();
-                System.out.println("\n" + response);
-                // prints the username after displaying the server's message
-                if (client.getUsername() != null) {
-                    System.out.print("[" + client.getUsername() + "]: ");
-                    controller.updateChatLog("\n" + response);
-                }
-		}while(response.equals("."));    //exits if client enters "."
+                do{
+                    response = reader.readLine();
+                        System.out.println("\n" + response);
+                        // prints the username after displaying the server's message
+                        if (client.getUsername() != null) {
+                            System.out.print("" + client.getUsername() + ": ");
+                            controller.updateChatLog("\n" + response);
+                        }
+                }while(response.equals("."));    //exits if client enters "."
             } catch (IOException ex) {
                 System.out.println(ex.getMessage());
                 break;
@@ -138,8 +140,6 @@ class WriteThread extends Thread {
         do {
             synchronized (controller.messageBuffer){
                 if(!controller.messageBuffer.isEmpty()){
-
-                    System.out.println(controller.messageBuffer.size());
                     text = controller.getNextMessage();
                     if(!text.equals("")) {
                         controller.updateChatLog("\n" + text);
@@ -149,7 +149,6 @@ class WriteThread extends Thread {
             }
 
         } while (!text.equals("."));
-
         try {
             socket.close();
         } catch (IOException ex) {

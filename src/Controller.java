@@ -62,4 +62,15 @@ public class Controller {
             return null;
         }
     }
+
+    public Button getLoginButton() {
+        return loginButton;
+    }
+
+    public TextField getUserNameTextField() {
+        return userNameTextField;
+    }
+    public TextField getMessageTextField() {
+        return messageTextField;
+    }
 }
