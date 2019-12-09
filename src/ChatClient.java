@@ -1,12 +1,16 @@
 
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.VBox;
+
 
 import java.net.*;
 import java.io.*;
@@ -24,9 +28,9 @@ public class ChatClient{
 	public ChatClient(String hostname, int port, String username, Controller controller){
 		this.hostname = hostname;
 		this.port = port;
-		this.username = username;
 		this.controller = controller;
-		this.chatLogBuilder = new StringBuilder();
+        this.username = controller.getUserName();
+        this.chatLogBuilder = new StringBuilder();
 	}
 		
 	public void execute(){
@@ -44,11 +48,13 @@ public class ChatClient{
 		}
 	}
 
-
-
-	void setUsername(String username){
-		this.username = username;
+	void setUsername(){
+		this.username = controller.getUserName();
 	}
+	void setUsername(String username){
+        this.username = username;
+    }
+
 	
 	String getUsername(){
 		return this.username;
@@ -125,22 +131,28 @@ class WriteThread extends Thread {
         Scanner scanner = new Scanner(System.in);
 
         String username = this.username;
-        client.setUsername(username);
+        client.setUsername();
         writer.println(username);
 
-        String text;
-
+        String text = "";
         do {
-            text = scanner.nextLine();
-            controller.updateChatLog("\n" + text);
-            writer.println(text);
+            if(!controller.messageBuffer.isEmpty()){
+                System.out.println(controller.messageBuffer.size());
+                text = controller.getNextMessage();
+                if(!text.equals("")) {
+                    controller.updateChatLog("\n" + text);
+                    writer.println(text);
+                }
+            }
+
         } while (!text.equals("."));
 
         try {
             socket.close();
         } catch (IOException ex) {
- 
+
             System.out.println("Error writing to server: " + ex.getMessage());
         }
+
     }
 }

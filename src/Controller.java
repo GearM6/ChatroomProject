@@ -11,6 +11,7 @@ import javafx.scene.input.KeyEvent;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.LinkedList;
 import java.util.ResourceBundle;
 
 public class Controller {
@@ -18,19 +19,40 @@ public class Controller {
     @FXML private Button loginButton;
     @FXML private TextField messageTextField;
     @FXML private TextArea chatLog;
+    LinkedList<String> messageBuffer = new LinkedList<>();
 
-    @FXML
-    protected boolean attemptLogin(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("ChatAppStyle.fxml"));
-        Main.userName = userNameTextField.getText();
-        return true;
-    }
-    @FXML void sendMessage(KeyEvent event){
+    @FXML boolean listenForEnter(KeyEvent event){
         if(event.getCode() == KeyCode.ENTER){
-            System.out.println(messageTextField.getText());
+            return true;
         }
+        return false;
+    }
+    @FXML public String changeUserName(KeyEvent event){
+        if(event.getCode() == KeyCode.ENTER && userNameTextField.getText().trim().length() > 0){
+            userNameTextField.setEditable(false);
+            return userNameTextField.getText().trim();
+        }
+        else return "";
     }
     @FXML public void updateChatLog(String message){
         chatLog.appendText(message);
+    }
+    public String getUserName(){
+        return userNameTextField.getText().trim();
+    }
+    @FXML
+    private void sendMessage(){
+        String msg = messageTextField.getText();
+        messageBuffer.add(msg);
+        messageTextField.setText("");
+    }
+
+    public String getNextMessage(){
+        if(!messageBuffer.isEmpty()){
+            return messageBuffer.remove();
+        }
+        else {
+            return null;
+        }
     }
 }

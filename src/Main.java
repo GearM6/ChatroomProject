@@ -1,11 +1,14 @@
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
-import javax.xml.soap.Text;
 
 //get username
 //connect to server
@@ -14,7 +17,7 @@ import javax.xml.soap.Text;
 public class Main extends Application {
     private String hostname;
     private String port;
-    public static String userName = "";
+    public String userName = "";
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -27,6 +30,7 @@ public class Main extends Application {
         Scene scene = new Scene(root, 687, 444);
         primaryStage.setScene(scene);
         primaryStage.show();
+
         //TextArea chatLog = (TextArea)root.lookup("#chatLog");
         ChatClient chatClient = new ChatClient("127.0.0.1", 8000, "userName", controller);
         chatClient.execute();
