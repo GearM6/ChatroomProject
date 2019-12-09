@@ -1,18 +1,16 @@
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
-import java.io.IOException;
-import java.net.URL;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.LinkedList;
-import java.util.ResourceBundle;
 
 public class Controller {
     @FXML private TextField userNameTextField;
@@ -23,6 +21,7 @@ public class Controller {
 
     @FXML boolean listenForEnter(KeyEvent event){
         if(event.getCode() == KeyCode.ENTER){
+            sendMessage();
             return true;
         }
         return false;
@@ -45,6 +44,14 @@ public class Controller {
         String msg = messageTextField.getText();
         messageBuffer.add(msg);
         messageTextField.setText("");
+        String audio = "send-receive.mp3";
+        try{
+            Media sound = new Media(new File(audio).toURI().toString());
+            MediaPlayer mediaPlayer = new MediaPlayer(sound);
+            mediaPlayer.play();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public String getNextMessage(){
