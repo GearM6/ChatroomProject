@@ -61,6 +61,8 @@ public class ChatClient{
 	public void terminate() throws IOException {
 	    PrintWriter writer = new PrintWriter(this.socket.getOutputStream());
 	    writer.println(".");
+	    writer.flush();
+	    this.socket.close();
     }
 
 }
