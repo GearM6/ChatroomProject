@@ -56,13 +56,14 @@ public class UserThread extends Thread {
                 String t = formatter.format(time);
 
 
-                serverMessage = "" + userName + " [" + t + "]: "+ clientMessage;
-                System.out.println(serverMessage);
+                serverMessage = clientMessage; //"" + userName + " [" + t + "]: "+ clientMessage;
+
                 if(clientMessage.equals(".")){
                     serverMessage = "Confirming sign off";
                     server.exitConf(serverMessage, this);
                     break;
                 }
+
                 else{
                    server.broadcast(serverMessage, this);
                 }
@@ -70,7 +71,6 @@ public class UserThread extends Thread {
 
             server.removeUser(userName, this);
             socket.close();
-            System.out.println(userName + " has left the chat.");
 
             serverMessage = userName + " has left.";
             server.broadcast(serverMessage, this);

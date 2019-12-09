@@ -46,19 +46,20 @@ public class Controller {
     @FXML
     private void sendMessage(){
         String msg = "";
+        messageBuffer.clear();
 
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.getDefault());
-        LocalTime time = LocalTime.now();
-        String t = formatter.format(time);
+        String t = formatter.format(LocalTime.now());
 
 
         if(messageTextField.getText().equals(".")){
             loginButton.setDisable(true);
             messageTextField.setDisable(true);
+            msg = userNameTextField.getText() + " has left the chat.";
         }
         else{
-            msg = messageTextField.getText();
+            msg = "" + userNameTextField.getText() + " [" + t + "]: " +  messageTextField.getText();
         }
 
         messageBuffer.add(msg);
