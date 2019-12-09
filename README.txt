@@ -1,3 +1,1 @@
-Using this tutorial:
-
-https://www.codejava.net/java-se/networking/how-to-create-a-chat-console-application-in-java-using-socket
+A simple, great chat app to run on localhost which echoes the all too familiar tone of AIM
