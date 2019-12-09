@@ -45,7 +45,7 @@ public class UserThread extends Thread {
 
             do {
                 clientMessage = reader.readLine();
-                serverMessage = "[" +userName + "]: " + clientMessage;
+                serverMessage = "[" + userName + "]: " + clientMessage;
                 if(clientMessage.equals(".")){
                     serverMessage = "Confirming sign off";
                     server.exitConf(serverMessage, this);
