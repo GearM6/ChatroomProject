@@ -55,8 +55,9 @@ public class UserThread extends Thread {
                 LocalTime time = LocalTime.now();
                 String t = formatter.format(time);
 
-                System.out.println(clientMessage);
+
                 serverMessage = "" + userName + " [" + t + "]: "+ clientMessage;
+                System.out.println(serverMessage);
                 if(clientMessage.equals(".")){
                     serverMessage = "Confirming sign off";
                     server.exitConf(serverMessage, this);
