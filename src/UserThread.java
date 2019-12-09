@@ -50,7 +50,9 @@ public class UserThread extends Thread {
                     serverMessage = "Confirming sign off";
                     server.exitConf(serverMessage, this);
                 }
-                server.broadcast(serverMessage, this);
+                else{
+                   server.broadcast(serverMessage, this);
+                }
             } while (!clientMessage.equals("."));
 
             server.removeUser(userName, this);
