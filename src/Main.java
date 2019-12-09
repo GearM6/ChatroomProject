@@ -5,8 +5,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 
-import javax.xml.soap.Text;
-
 //get username
 //connect to server
 //get current users in server
