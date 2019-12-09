@@ -18,13 +18,17 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("ChatAppStyle.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("ChatAppStyle.fxml"));
+        Parent root = loader.load();
+
+        Controller controller = loader.getController();
+
         primaryStage.setTitle("Chat Room");
         Scene scene = new Scene(root, 687, 444);
         primaryStage.setScene(scene);
         primaryStage.show();
-        TextArea chatLog = (TextArea)root.lookup("#chatLog");
-        ChatClient chatClient = new ChatClient("127.0.0.1", 8000, "userName");
+        //TextArea chatLog = (TextArea)root.lookup("#chatLog");
+        ChatClient chatClient = new ChatClient("127.0.0.1", 8000, "userName", controller);
         chatClient.execute();
     }
 

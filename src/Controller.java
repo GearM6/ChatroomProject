@@ -30,7 +30,7 @@ public class Controller {
             System.out.println(messageTextField.getText());
         }
     }
-    @FXML public void updateChatLog(StringBuilder chatLogBuilder){
-        chatLog.setText(chatLogBuilder.toString());
+    @FXML public void updateChatLog(String message){
+        chatLog.setText(message);
     }
 }

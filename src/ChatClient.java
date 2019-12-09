@@ -1,5 +1,4 @@
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -19,11 +18,13 @@ public class ChatClient{
 	private int port;
 	private String username;
 	private StringBuilder chatLogBuilder;
+	private Controller controller;
 
-	public ChatClient(String hostname, int port, String username){
+	public ChatClient(String hostname, int port, String username, Controller controller){
 		this.hostname = hostname;
 		this.port = port;
 		this.username = username;
+		this.controller = controller;
 		this.chatLogBuilder = new StringBuilder();
 	}
 		
@@ -31,7 +32,7 @@ public class ChatClient{
 		try{
 			Socket socket = new Socket(hostname,port);
 			System.out.println("Connected to chat server");
-			new ReadThread(socket,this).start();
+			new ReadThread(socket,this, controller).start();
 			new WriteThread(socket,this, this.username).start();
 		}
 		catch(UnknownHostException e){
@@ -60,13 +61,14 @@ class ReadThread extends Thread {
     private ChatClient client;
 	private String response;
 	private Parent root;
-	private TextArea chatLog;
+	private Controller controller;
 
-    public ReadThread(Socket socket, ChatClient client) throws IOException {
+
+    public ReadThread(Socket socket, ChatClient client, Controller controller) throws IOException {
         this.socket = socket;
         this.client = client;
         this.root = FXMLLoader.load(getClass().getResource("ChatAppStyle.fxml"));
-        this.chatLog = (TextArea)root.lookup("#chatLog");
+        this.controller = controller;
         try {
             InputStream input = socket.getInputStream();
             reader = new BufferedReader(new InputStreamReader(input));
@@ -86,7 +88,7 @@ class ReadThread extends Thread {
                 // prints the username after displaying the server's message
                 if (client.getUsername() != null) {
                     System.out.print("[" + client.getUsername() + "]: ");
-                    chatLog.setText(chatLog.getText()+response);
+                    controller.updateChatLog(response);
                 }
 		}while(response.equals("."));    //exits if client enters "."
             } catch (IOException ex) {
